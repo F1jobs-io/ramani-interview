@@ -1,0 +1,8 @@
+<h1>Clinical Trial Data Model (Admin-Oriented)</h1>
+<ul>
+  <li>Study, Protocol, Protocol Version, Site, Investigator (PI), Subject/Patient, Screening, Enrollment, Visit, Adverse Event, Consent.</li>
+  <li>Snapshot Protocol Version on Enrollment; maintain version lineage across visits.</li>
+  <li>Prevent multiple active enrollments per subject; dedupe with hashed identifiers and supervised merges.</li>
+  <li>Security: OWD Private for Subject/AE; role hierarchy by Program→Study→Site; Restriction Rules for PHI.</li>
+</ul>
+

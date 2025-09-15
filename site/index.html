@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>F1Jobs.io – Candidate Prep Hub</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="layout">
+      <aside id="sidebar" class="sidebar" aria-label="Sidebar Navigation">
+        <div class="brand">
+          <img class="logo-img" src="assets/logo.svg" alt="F1Jobs.io Logo" />
+          <div class="title">F1Jobs.io Prep Hub</div>
+          <button id="sidebar-close" class="btn mobile-only" title="Close menu" aria-label="Close menu" aria-controls="sidebar" aria-expanded="true" style="margin-left:auto;">✕</button>
+        </div>
+        <nav class="nav">
+          <div class="section">Start Here</div>
+          <button class="nav-link" data-doc="welcome">Welcome</button>
+          <button class="nav-link" data-doc="study_plan">Study Plan</button>
+          <button class="nav-link" data-doc="timeline">Timeline</button>
+
+          <div class="section">Company</div>
+          <button class="nav-link" data-doc="company_profile">LabConnect Company Profile</button>
+
+          <div class="section">Candidate</div>
+          <button class="nav-link" data-doc="ramani_profile">Ramani Profile</button>
+          <button class="nav-link" data-doc="elevator_pitch">Elevator Pitch</button>
+          <button class="nav-link" data-doc="plan_30_60_90">30/60/90 Plan</button>
+
+          <div class="section">Role & Prep</div>
+          <button class="nav-link" data-doc="role_overview">Role Overview</button>
+          <button class="nav-link" data-doc="interview_prep">Interview Prep Guide</button>
+          <button class="nav-link" data-doc="technical_qa">Technical Q&A</button>
+          <button class="nav-link" data-doc="behavioral_answers">Behavioral Answers</button>
+
+          <div class="section">Clinical Trial Core</div>
+          <button class="nav-link" data-doc="compliance">21 CFR Part 11 & ALCOA+</button>
+          <button class="nav-link" data-doc="data_model">Clinical Data Model</button>
+          <button class="nav-link" data-doc="cpq_conga">CPQ & Conga in Trials</button>
+
+          <div class="section">Bookmarks</div>
+          <div id="bookmarks-list" class="bookmarks"></div>
+
+          <div class="section">Toolkit</div>
+          <button class="nav-link" data-doc="checklists">Checklists</button>
+          <button class="nav-link" data-doc="resources">Resources</button>
+
+          <div class="section">LabConnect</div>
+          <button class="nav-link" data-doc="labconnect_overview">Company Overview</button>
+          <button class="nav-link" data-doc="labconnect_hiring">Hiring Style & Process</button>
+          <button class="nav-link" data-doc="labconnect_research">Research Plan & Open Questions</button>
+          <button class="nav-link" data-doc="labconnect_complete">Complete Guide for Ramani</button>
+        </nav>
+        <div class="footer">
+          <a href="#" id="download-pdfs" aria-disabled="true" title="PDF export not enabled in this build">Download PDFs</a>
+        </div>
+      </aside>
+      <main class="content">
+        <section class="reader">
+          <header class="topbar">
+            <div class="topbar-row">
+              <button id="sidebar-toggle" class="btn" title="Toggle menu" aria-label="Toggle menu" aria-controls="sidebar" aria-expanded="true">☰</button>
+              <input id="search" type="search" placeholder="Search in current document" />
+              <div class="topbar-actions">
+                <button id="open-global-search" class="btn" title="Search across all docs">Global Search</button>
+                <button id="export-notes" class="btn" title="Export notes & bookmarks">Export Notes</button>
+                <button id="toggle-notes" class="btn" title="Show/Hide notes">Notes</button>
+                <div class="btn-group" role="group" aria-label="Display settings">
+                  <button id="font-dec" class="btn" title="Decrease text size" aria-label="Decrease text size">A−</button>
+                  <button id="font-inc" class="btn" title="Increase text size" aria-label="Increase text size">A+</button>
+                  <button id="theme-toggle" class="btn" title="Toggle light/dark theme" aria-pressed="false" aria-label="Toggle light/dark theme">Theme</button>
+                </div>
+              </div>
+            </div>
+          </header>
+          <article id="doc-content" class="doc-content"></article>
+        </section>
+        <aside class="notes-panel" id="notes-panel" aria-label="Notes">
+          <div class="notes-header">
+            <div class="notes-title">Notes</div>
+            <div class="notes-tabs">
+              <button class="tab active" data-scope="doc">This Doc</button>
+              <button class="tab" data-scope="global">Global</button>
+            </div>
+          </div>
+          <textarea id="notes-text" placeholder="Write notes here... (auto-saved)"></textarea>
+          <div class="notes-actions">
+            <button id="clear-notes" class="btn danger">Clear</button>
+          </div>
+        </aside>
+      </main>
+    </div>
+
+    <div id="sidebar-backdrop" class="sidebar-backdrop" aria-hidden="true"></div>
+    <div id="global-search-overlay" class="overlay" aria-hidden="true">
+      <div class="overlay-card">
+        <div class="overlay-header">
+          <input id="global-search-input" type="search" placeholder="Search all docs (type to search, Enter to open)" />
+          <button id="close-global-search" class="btn">Close</button>
+        </div>
+        <div id="global-search-results" class="overlay-results"></div>
+      </div>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+  </html>

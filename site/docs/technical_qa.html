@@ -1,0 +1,60 @@
+<h1>Technical Q&A Drills</h1>
+
+<h2>1) Clean-up and Data Integrity (Clinical Trial Context)</h2>
+<p><strong>Prompt:</strong> How would you lead a Salesforce clean-up project for clinical trial data?</p>
+<p><strong>Answer:</strong> In clinical trials, data integrity is critical for regulatory compliance and audit readiness. I start with baseline quality metrics following ALCOA+ principles (Attributable, Legible, Contemporaneous, Original, Accurate + Complete, Consistent, Enduring, Available).
+
+I inventory duplicates using matching rules for study subjects (using protocol ID, site number, and screening number rather than traditional contact fields), implement DemandTools supervised merges while preserving audit trails and lineage for regulatory purposes. I standardize picklists for adverse events, concomitant medications, and study endpoints to ensure consistent reporting.
+
+Critical for LabConnect: Deploy validation rules behind custom metadata switches to enable/disable during system upgrades without affecting live studies. Create pre/post quality scorecards measuring data completeness, accuracy, and consistency. Document all procedures as SOPs with electronic signatures for Part 11 compliance. For central lab operations, ensure sample tracking data integrity with 100% accountability matching LabConnect's SampleGISTICS standards.</p>
+
+<h2>2) Access Troubleshooting (Clinical Data Security)</h2>
+<p><strong>Prompt:</strong> Study coordinator cannot see subject records for their assigned protocol.</p>
+<p><strong>Answer:</strong> Clinical trial data access requires strict security controls due to PHI and regulatory requirements. I follow systematic troubleshooting:
+
+Check profile/permission sets for proper clinical role assignment → Review OWD settings for Study Subject/Protocol objects → Validate role hierarchy placing study coordinators under principal investigators → Examine sharing rules for protocol-specific access → Check restriction rules limiting PHI access by geography or study phase → Verify field-level security for sensitive fields like subject IDs or safety data.
+
+Critical for LabConnect: Use "Sharing" button to trace grants and identify where access is blocked. Validate login history for any audit trail requirements and check session policies if electronic signature workflows are involved. For central lab operations, ensure sample handlers can only see relevant study data without cross-protocol contamination. Document all access investigations for regulatory audit trails.</p>
+
+<h2>3) Performance at Scale (Clinical Trial Volume)</h2>
+<p><strong>Prompt:</strong> Reports and dashboards are slow with growing study volume and subject enrollment.</p>
+<p><strong>Answer:</strong> Clinical trial systems accumulate massive datasets as studies progress and enrollment grows. For LabConnect's scale (200+ pharma clients across 70+ countries), performance optimization is critical.
+
+I implement selective filters on date ranges and study status to limit query scope. Create custom indexes on frequently queried fields like Protocol ID, Subject Number, and Sample Collection Date. Use skinny tables where available for reporting on core study metrics. Avoid cross-object filters when possible, especially between Study Subjects and Time Series data (visits, samples, results).
+
+Optimize report buckets for enrollment phases and sample processing workflows. Create scheduled snapshots for trending enrollment and sample throughput rather than real-time queries. Review SOQL selectivity in automation rules, especially for sample status updates and milestone triggers.
+
+LabConnect-specific: Design reporting architecture to handle SampleGISTICS volume with separate indexes for sample tracking, chain of custody, and results reporting. Implement data archiving strategies for completed studies while maintaining audit trail accessibility.</p>
+
+<h2>4) CPQ for Milestones</h2>
+<p><strong>Prompt:</strong> Configure per-visit/milestone billing.</p>
+<p><strong>Answer:</strong> Products for screening/enrollment/visit; price rules tied to status fields; discount schedules per volume/site; approval chains for exceptions; Accounting integration for invoice triggers.</p>
+
+<h2>5) Conga for Consent/Contracts</h2>
+<p><strong>Prompt:</strong> Automate informed consent forms and site contracts.</p>
+<p><strong>Answer:</strong> Composer templates parameterized by Protocol Version and country clauses; Workflows to launch packages; Contracts for version/redline control; Adobe/DocuSign for signatures with meaning/intent captured.</p>
+
+<h2>6) Sample Chain of Custody (LabConnect-Specific)</h2>
+<p><strong>Prompt:</strong> How would you implement sample tracking with 100% accountability?</p>
+<p><strong>Answer:</strong> Design a comprehensive sample lifecycle system using Salesforce objects for Sample Collection, Sample Transit, Sample Processing, and Sample Storage. Implement barcode scanning through Salesforce mobile apps for real-time status updates.
+
+Create validation rules requiring electronic signatures at each custody transfer point. Use Platform Events for real-time notifications when samples deviate from expected timelines or temperature ranges. Implement automated escalation flows for custody breaks or processing delays.
+
+For LabConnect's SampleGISTICS integration: Design API endpoints using Named Credentials for secure sample status synchronization. Create audit trails capturing all sample handling with field history tracking for regulatory compliance. Build dashboards showing sample throughput, custody exceptions, and processing metrics across all 70+ countries.</p>
+
+<h2>7) Regulatory Audit Trail Management</h2>
+<p><strong>Prompt:</strong> How do you ensure Salesforce changes meet 21 CFR Part 11 requirements?</p>
+<p><strong>Answer:</strong> Implement comprehensive change control using Setup Audit Trail monitoring, Field History Tracking on all critical objects, and electronic signature workflows for system changes. Create custom objects to track Change Requests with approval workflows requiring Principal Investigator or Study Director signatures.
+
+Use custom metadata types for configuration changes that can be deployed through change sets with full audit documentation. Implement validation rules requiring business justification and risk assessment for any data modifications during active studies.
+
+LabConnect-specific: Design quarterly audit packages including Setup Audit Trail exports, Field History reports, and User Login History for regulatory submissions. Create automated alerts for any configuration changes affecting sample processing workflows or data integrity controls.</p>
+
+<h2>8) Integration Architecture for Clinical Operations</h2>
+<p><strong>Prompt:</strong> How would you integrate Salesforce with laboratory information systems?</p>
+<p><strong>Answer:</strong> Design REST API architecture using Named Credentials for secure authentication to lab systems. Implement Platform Events for near real-time sample result updates and status notifications. Use External IDs for bidirectional synchronization of sample IDs, protocol numbers, and subject identifiers.
+
+Create middleware handling data transformation between lab result formats and Salesforce clinical data structures. Implement dead letter queues and retry mechanisms for failed integrations, with automated escalation for sample processing delays.
+
+For LabConnect's multi-country operations: Design integration patterns handling different lab result formats, timezone considerations, and regulatory requirements across 70+ countries. Build monitoring dashboards tracking integration health, data latency, and synchronization errors with automated alerting for business-critical failures.</p>
+

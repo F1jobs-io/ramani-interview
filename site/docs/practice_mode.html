@@ -1,0 +1,1183 @@
+<h1>Interview Practice Mode</h1>
+<p class="muted">Interactive practice sessions to build confidence and perfect your responses</p>
+
+<div class="practice-dashboard">
+  <div class="practice-stats">
+    <div class="stat-card">
+      <div class="stat-value" id="total-questions">20</div>
+      <div class="stat-label">Total Questions</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="confident-count">0</div>
+      <div class="stat-label">Confident</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="practice-streak">0</div>
+      <div class="stat-label">Practice Streak</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="completion-rate">0%</div>
+      <div class="stat-label">Completion</div>
+    </div>
+  </div>
+
+  <div class="practice-modes">
+    <h2>Choose Your Practice Mode</h2>
+    <div class="mode-grid">
+      <div class="mode-card" onclick="startPracticeMode('flashcard')">
+        <div class="mode-icon">🃏</div>
+        <h3>Flashcard Mode</h3>
+        <p>Quick practice with immediate feedback. Perfect for reviewing specific questions.</p>
+        <button class="mode-btn">Start Flashcards</button>
+      </div>
+
+      <div class="mode-card" onclick="startPracticeMode('timed')">
+        <div class="mode-icon">⏱️</div>
+        <h3>Timed Practice</h3>
+        <p>Practice with realistic time constraints. Build confidence under pressure.</p>
+        <button class="mode-btn">Start Timed Session</button>
+      </div>
+
+      <div class="mode-card" onclick="startPracticeMode('category')">
+        <div class="mode-icon">📂</div>
+        <h3>Category Focus</h3>
+        <p>Focus on specific types of questions: technical, behavioral, or company-specific.</p>
+        <button class="mode-btn">Choose Category</button>
+      </div>
+
+      <div class="mode-card" onclick="startPracticeMode('mock')">
+        <div class="mode-icon">🎭</div>
+        <h3>Full Mock Interview</h3>
+        <p>Complete end-to-end interview simulation with realistic timing and scoring.</p>
+        <button class="mode-btn">Start Mock Interview</button>
+      </div>
+
+      <div class="mode-card" onclick="startPracticeMode('weak-areas')">
+        <div class="mode-icon">🎯</div>
+        <h3>Focus Weak Areas</h3>
+        <p>Automatically practice questions you're least confident about.</p>
+        <button class="mode-btn">Practice Weak Areas</button>
+      </div>
+
+      <div class="mode-card" onclick="startPracticeMode('random')">
+        <div class="mode-icon">🎲</div>
+        <h3>Random Practice</h3>
+        <p>Randomized questions to test your readiness across all topics.</p>
+        <button class="mode-btn">Random Practice</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Practice Session Modal -->
+<div id="practice-session" class="practice-overlay" style="display: none;">
+  <div class="practice-container">
+    <div class="practice-header">
+      <div class="practice-info">
+        <span id="current-mode">Practice Mode</span>
+        <span id="question-counter">Question 1 of 20</span>
+      </div>
+      <div class="practice-controls">
+        <button id="timer-display" class="timer-btn">02:30</button>
+        <button onclick="exitPractice()" class="exit-btn">Exit</button>
+      </div>
+    </div>
+
+    <div class="practice-content">
+      <div class="practice-question">
+        <div class="question-category" id="practice-category">Opening Questions</div>
+        <h2 id="practice-question-text">Tell us about yourself and why you're interested in LabConnect.</h2>
+        <div class="difficulty-indicator">
+          <span id="question-difficulty">Medium</span>
+        </div>
+      </div>
+
+      <div class="practice-answer" id="practice-answer-section" style="display: none;">
+        <div class="answer-header">
+          <h3>Perfect Answer:</h3>
+          <div class="answer-actions">
+            <button onclick="startRecording()" id="record-btn" class="record-btn">🎤 Record Response</button>
+            <button onclick="playbackRecording()" id="playback-btn" class="playback-btn" style="display: none;">▶️ Playback</button>
+          </div>
+        </div>
+        <div class="answer-text" id="practice-answer-text">
+          <!-- Answer content will be loaded here -->
+        </div>
+      </div>
+
+      <div class="practice-actions">
+        <button onclick="revealAnswer()" id="reveal-btn" class="primary-btn">Reveal Answer</button>
+        <button onclick="nextQuestion()" id="next-btn" class="primary-btn" style="display: none;">Next Question</button>
+        <div class="confidence-section" id="confidence-section" style="display: none;">
+          <span>How confident are you with this answer?</span>
+          <div class="confidence-buttons">
+            <button class="confidence-btn low" onclick="setSessionConfidence('low')" title="Need more practice">😰 Need Practice</button>
+            <button class="confidence-btn medium" onclick="setSessionConfidence('medium')" title="Getting there">😐 Getting There</button>
+            <button class="confidence-btn high" onclick="setSessionConfidence('high')" title="Confident">😎 Confident</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="progress-bar">
+      <div class="progress-fill" id="session-progress"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Category Selection Modal -->
+<div id="category-modal" class="practice-overlay" style="display: none;">
+  <div class="modal-container">
+    <div class="modal-header">
+      <h2>Choose Practice Category</h2>
+      <button onclick="closeCategoryModal()" class="close-btn">✕</button>
+    </div>
+    <div class="category-options">
+      <button class="category-option" onclick="startCategoryPractice('opening')">
+        <span class="category-icon">👋</span>
+        <div>
+          <strong>Opening Questions</strong>
+          <small>Tell me about yourself, why this company</small>
+        </div>
+      </button>
+      <button class="category-option" onclick="startCategoryPractice('clinical')">
+        <span class="category-icon">🏥</span>
+        <div>
+          <strong>Clinical Trial Context</strong>
+          <small>Industry knowledge, compliance, regulations</small>
+        </div>
+      </button>
+      <button class="category-option" onclick="startCategoryPractice('technical')">
+        <span class="category-icon">💻</span>
+        <div>
+          <strong>Technical Deep Dives</strong>
+          <small>Salesforce expertise, integrations, performance</small>
+        </div>
+      </button>
+      <button class="category-option" onclick="startCategoryPractice('behavioral')">
+        <span class="category-icon">🤝</span>
+        <div>
+          <strong>Behavioral Scenarios</strong>
+          <small>STAR method, problem-solving, teamwork</small>
+        </div>
+      </button>
+      <button class="category-option" onclick="startCategoryPractice('role-specific')">
+        <span class="category-icon">🎯</span>
+        <div>
+          <strong>Role-Specific</strong>
+          <small>Cleanup projects, Conga optimization</small>
+        </div>
+      </button>
+      <button class="category-option" onclick="startCategoryPractice('company')">
+        <span class="category-icon">🏢</span>
+        <div>
+          <strong>Company-Specific</strong>
+          <small>Why LabConnect, culture fit, remote work</small>
+        </div>
+      </button>
+      <button class="category-option" onclick="startCategoryPractice('problem-solving')">
+        <span class="category-icon">🔧</span>
+        <div>
+          <strong>Problem-Solving</strong>
+          <small>Critical thinking, user adoption, troubleshooting</small>
+        </div>
+      </button>
+      <button class="category-option" onclick="startCategoryPractice('strategic')">
+        <span class="category-icon">💡</span>
+        <div>
+          <strong>Strategic Thinking</strong>
+          <small>Growth opportunities, staying current</small>
+        </div>
+      </button>
+      <button class="category-option" onclick="startCategoryPractice('closing')">
+        <span class="category-icon">🎬</span>
+        <div>
+          <strong>Closing Questions</strong>
+          <small>Your questions, why hire you</small>
+        </div>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Session Complete Modal -->
+<div id="session-complete-modal" class="practice-overlay" style="display: none;">
+  <div class="modal-container">
+    <div class="modal-header">
+      <h2>🎉 Practice Session Complete!</h2>
+    </div>
+    <div class="session-results">
+      <div class="result-stats">
+        <div class="result-stat">
+          <div class="result-value" id="final-score">85%</div>
+          <div class="result-label">Overall Confidence</div>
+        </div>
+        <div class="result-stat">
+          <div class="result-value" id="questions-practiced">8</div>
+          <div class="result-label">Questions Practiced</div>
+        </div>
+        <div class="result-stat">
+          <div class="result-value" id="time-spent">12:45</div>
+          <div class="result-label">Time Spent</div>
+        </div>
+      </div>
+
+      <div class="improvement-areas" id="improvement-areas">
+        <h3>Areas for Improvement:</h3>
+        <ul id="weak-areas-list">
+          <!-- Will be populated dynamically -->
+        </ul>
+      </div>
+
+      <div class="session-actions">
+        <button onclick="startPracticeMode('weak-areas')" class="primary-btn">Practice Weak Areas</button>
+        <button onclick="closeSessionComplete()" class="secondary-btn">Back to Dashboard</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Practice Mode Data
+const practiceQuestions = [
+  {
+    id: 1,
+    category: "opening",
+    difficulty: "medium",
+    question: "Tell us about yourself and why you're interested in LabConnect.",
+    answer: `"I'm a certified Salesforce Administrator with over 4 years of experience specializing in data integrity and system optimization in regulated industries. Currently at Access Intelligence, I've been leading enterprise-level Salesforce initiatives, including a 500K+ record data management project with 98% accuracy.
+
+What excites me about LabConnect is the perfect timing of this opportunity. With Wesley Wheeler's leadership since September 2024 and his proven track record scaling UPS Healthcare to $10 billion, LabConnect is positioned for extraordinary growth. Your plan to double headcount from 400 to 800 employees over the next two years, combined with the new Strategic Advisory Board launching in February 2025, signals a company investing heavily in technology infrastructure - exactly where my expertise adds value.
+
+I'm particularly drawn to LabConnect's strategic evolution. The 2020 headquarters move from Seattle to Johnson City wasn't just relocation - it was repositioning for growth in the clinical trials heartland. Your specialization in complex central laboratory services for cell & gene therapy and rare diseases represents the cutting edge of pharmaceutical development.
+
+Having worked at Stryker in medical devices and MetLife in healthcare insurance, I understand the critical importance of data integrity in regulated environments. Your SampleGISTICS platform achieving 100% sample accountability across 70+ countries demonstrates the same attention to quality that drives my approach to system administration.
+
+With my Conga certification and proven track record of reducing manual processes by 25-50%, I'm confident I can immediately contribute to your Salesforce cleanup efforts while supporting LabConnect's aggressive growth trajectory. This isn't just a role change for me - it's joining a company at the perfect inflection point."`
+  },
+  {
+    id: 2,
+    category: "opening",
+    difficulty: "medium",
+    question: "Walk us through your experience with data clean-up projects.",
+    answer: `"I've led three major data clean-up initiatives, but let me focus on the most relevant one at Access Intelligence.
+
+**Situation:** We inherited a Salesforce instance with 500,000+ records across 15 objects, with duplicate rates exceeding 20% and inconsistent data formats causing reporting inaccuracies.
+
+**Task:** I was tasked with cleaning the data while maintaining business continuity and creating preventive measures for future data quality.
+
+**Action:** I implemented a phased approach:
+• Phase 1: Used DemandTools to identify and analyze duplicates, creating a master matching rules matrix
+• Phase 2: Built validation rules and workflow automation to prevent future bad data entry
+• Phase 3: Executed the clean-up in batches during off-hours, with rollback procedures ready
+• Phase 4: Implemented real-time duplicate detection using Duplicate Rules and Matching Rules
+
+**Result:** Achieved 98% data accuracy, reduced storage costs by 25%, and improved report accuracy by 40%. Most importantly, I created documentation and trained users, ensuring sustainable data quality. The preventive measures I implemented reduced new duplicate creation by 90%.
+
+This experience directly applies to LabConnect's needs because clinical trial data requires even stricter accuracy for regulatory compliance, and my systematic approach ensures both immediate cleanup and long-term data integrity."`
+  },
+  // Add more questions as needed...
+];
+
+// Practice State
+let currentSession = {
+  mode: null,
+  questions: [],
+  currentIndex: 0,
+  startTime: null,
+  responses: [],
+  timer: null,
+  timeRemaining: 150 // 2:30 in seconds
+};
+
+// Audio Recording
+let mediaRecorder;
+let recordedChunks = [];
+
+function updateDashboardStats() {
+  const confidence = JSON.parse(localStorage.getItem('interview-confidence') || '{}');
+  const confidentCount = Object.values(confidence).filter(level => level === 'high').length;
+  const totalQuestions = 20;
+  const completionRate = Math.round((Object.keys(confidence).length / totalQuestions) * 100);
+
+  document.getElementById('confident-count').textContent = confidentCount;
+  document.getElementById('completion-rate').textContent = completionRate + '%';
+
+  // Update practice streak from localStorage
+  const streak = localStorage.getItem('practice-streak') || '0';
+  document.getElementById('practice-streak').textContent = streak;
+}
+
+function startPracticeMode(mode) {
+  currentSession.mode = mode;
+  currentSession.startTime = Date.now();
+
+  // Configure session based on mode
+  switch(mode) {
+    case 'flashcard':
+      setupFlashcardMode();
+      break;
+    case 'timed':
+      setupTimedMode();
+      break;
+    case 'category':
+      showCategoryModal();
+      return;
+    case 'mock':
+      setupMockInterviewMode();
+      break;
+    case 'weak-areas':
+      setupWeakAreasMode();
+      break;
+    case 'random':
+      setupRandomMode();
+      break;
+  }
+
+  if (mode !== 'category') {
+    startPracticeSession();
+  }
+}
+
+function setupFlashcardMode() {
+  currentSession.questions = [...practiceQuestions];
+  currentSession.timeRemaining = null; // No timer for flashcards
+}
+
+function setupTimedMode() {
+  currentSession.questions = [...practiceQuestions];
+  currentSession.timeRemaining = 150; // 2:30 per question
+}
+
+function setupMockInterviewMode() {
+  currentSession.questions = [...practiceQuestions];
+  currentSession.timeRemaining = 180; // 3 minutes per question
+}
+
+function setupWeakAreasMode() {
+  const confidence = JSON.parse(localStorage.getItem('interview-confidence') || '{}');
+  currentSession.questions = practiceQuestions.filter(q => {
+    const qText = q.question;
+    return !confidence[qText] || confidence[qText] === 'low' || confidence[qText] === 'medium';
+  });
+
+  if (currentSession.questions.length === 0) {
+    alert('Great job! You\'re confident with all questions. Try random practice instead.');
+    return;
+  }
+}
+
+function setupRandomMode() {
+  currentSession.questions = [...practiceQuestions].sort(() => Math.random() - 0.5);
+}
+
+function showCategoryModal() {
+  document.getElementById('category-modal').style.display = 'flex';
+}
+
+function closeCategoryModal() {
+  document.getElementById('category-modal').style.display = 'none';
+}
+
+function startCategoryPractice(category) {
+  currentSession.questions = practiceQuestions.filter(q => q.category === category);
+  closeCategoryModal();
+  startPracticeSession();
+}
+
+function startPracticeSession() {
+  if (currentSession.questions.length === 0) {
+    alert('No questions available for this mode.');
+    return;
+  }
+
+  currentSession.currentIndex = 0;
+  document.getElementById('practice-session').style.display = 'flex';
+  loadCurrentQuestion();
+
+  if (currentSession.timeRemaining) {
+    startTimer();
+  } else {
+    document.getElementById('timer-display').style.display = 'none';
+  }
+}
+
+function loadCurrentQuestion() {
+  const question = currentSession.questions[currentSession.currentIndex];
+
+  document.getElementById('current-mode').textContent = formatModeName(currentSession.mode);
+  document.getElementById('question-counter').textContent =
+    `Question ${currentSession.currentIndex + 1} of ${currentSession.questions.length}`;
+  document.getElementById('practice-category').textContent = formatCategoryName(question.category);
+  document.getElementById('practice-question-text').textContent = question.question;
+  document.getElementById('question-difficulty').textContent = question.difficulty.charAt(0).toUpperCase() + question.difficulty.slice(1);
+  document.getElementById('practice-answer-text').innerHTML = question.answer.replace(/\n/g, '<br>');
+
+  // Reset UI state
+  document.getElementById('practice-answer-section').style.display = 'none';
+  document.getElementById('reveal-btn').style.display = 'inline-block';
+  document.getElementById('next-btn').style.display = 'none';
+  document.getElementById('confidence-section').style.display = 'none';
+
+  // Update progress bar
+  const progress = ((currentSession.currentIndex) / currentSession.questions.length) * 100;
+  document.getElementById('session-progress').style.width = progress + '%';
+
+  // Reset timer for timed modes
+  if (currentSession.mode === 'timed' || currentSession.mode === 'mock') {
+    currentSession.timeRemaining = currentSession.mode === 'mock' ? 180 : 150;
+    startTimer();
+  }
+}
+
+function startTimer() {
+  clearInterval(currentSession.timer);
+  updateTimerDisplay();
+
+  currentSession.timer = setInterval(() => {
+    currentSession.timeRemaining--;
+    updateTimerDisplay();
+
+    if (currentSession.timeRemaining <= 0) {
+      clearInterval(currentSession.timer);
+      revealAnswer();
+    }
+  }, 1000);
+}
+
+function updateTimerDisplay() {
+  const minutes = Math.floor(currentSession.timeRemaining / 60);
+  const seconds = currentSession.timeRemaining % 60;
+  document.getElementById('timer-display').textContent =
+    `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+}
+
+function formatModeName(mode) {
+  const names = {
+    'flashcard': 'Flashcard Mode',
+    'timed': 'Timed Practice',
+    'mock': 'Mock Interview',
+    'weak-areas': 'Weak Areas Focus',
+    'random': 'Random Practice'
+  };
+  return names[mode] || 'Practice Mode';
+}
+
+function formatCategoryName(category) {
+  const names = {
+    'opening': 'Opening Questions',
+    'clinical': 'Clinical Trial Context',
+    'technical': 'Technical Deep Dives',
+    'behavioral': 'Behavioral Scenarios',
+    'role-specific': 'Role-Specific',
+    'company': 'Company-Specific',
+    'problem-solving': 'Problem-Solving',
+    'strategic': 'Strategic Thinking',
+    'closing': 'Closing Questions'
+  };
+  return names[category] || category;
+}
+
+function revealAnswer() {
+  document.getElementById('practice-answer-section').style.display = 'block';
+  document.getElementById('reveal-btn').style.display = 'none';
+  document.getElementById('next-btn').style.display = 'inline-block';
+  document.getElementById('confidence-section').style.display = 'block';
+
+  if (currentSession.timer) {
+    clearInterval(currentSession.timer);
+  }
+}
+
+function nextQuestion() {
+  currentSession.currentIndex++;
+
+  if (currentSession.currentIndex >= currentSession.questions.length) {
+    completeSession();
+  } else {
+    loadCurrentQuestion();
+  }
+}
+
+function setSessionConfidence(level) {
+  const question = currentSession.questions[currentSession.currentIndex];
+  const confidence = JSON.parse(localStorage.getItem('interview-confidence') || '{}');
+  confidence[question.question] = level;
+  localStorage.setItem('interview-confidence', JSON.stringify(confidence));
+
+  // Visual feedback
+  document.querySelectorAll('.confidence-btn').forEach(btn => btn.classList.remove('active'));
+  document.querySelector(`.confidence-btn.${level}`).classList.add('active');
+
+  // Track response
+  currentSession.responses.push({
+    question: question.question,
+    confidence: level,
+    timeSpent: currentSession.mode === 'timed' || currentSession.mode === 'mock' ?
+      (currentSession.mode === 'mock' ? 180 : 150) - currentSession.timeRemaining : null
+  });
+}
+
+function completeSession() {
+  const endTime = Date.now();
+  const totalTime = Math.round((endTime - currentSession.startTime) / 1000);
+
+  // Calculate stats
+  const confidentResponses = currentSession.responses.filter(r => r.confidence === 'high').length;
+  const overallScore = Math.round((confidentResponses / currentSession.responses.length) * 100);
+
+  // Show completion modal
+  document.getElementById('final-score').textContent = overallScore + '%';
+  document.getElementById('questions-practiced').textContent = currentSession.responses.length;
+  document.getElementById('time-spent').textContent = formatTime(totalTime);
+
+  // Show weak areas
+  const weakAreas = currentSession.responses
+    .filter(r => r.confidence === 'low' || r.confidence === 'medium')
+    .map(r => r.question);
+
+  const weakAreasList = document.getElementById('weak-areas-list');
+  weakAreasList.innerHTML = '';
+
+  if (weakAreas.length > 0) {
+    weakAreas.forEach(question => {
+      const li = document.createElement('li');
+      li.textContent = question;
+      weakAreasList.appendChild(li);
+    });
+  } else {
+    document.getElementById('improvement-areas').style.display = 'none';
+  }
+
+  // Update practice streak
+  const currentStreak = parseInt(localStorage.getItem('practice-streak') || '0');
+  localStorage.setItem('practice-streak', (currentStreak + 1).toString());
+
+  document.getElementById('practice-session').style.display = 'none';
+  document.getElementById('session-complete-modal').style.display = 'flex';
+
+  updateDashboardStats();
+}
+
+function formatTime(seconds) {
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = seconds % 60;
+  return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+}
+
+function closeSessionComplete() {
+  document.getElementById('session-complete-modal').style.display = 'none';
+}
+
+function exitPractice() {
+  if (confirm('Are you sure you want to exit this practice session?')) {
+    if (currentSession.timer) {
+      clearInterval(currentSession.timer);
+    }
+    document.getElementById('practice-session').style.display = 'none';
+  }
+}
+
+// Audio Recording Functions
+async function startRecording() {
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    mediaRecorder = new MediaRecorder(stream);
+    recordedChunks = [];
+
+    mediaRecorder.ondataavailable = event => {
+      if (event.data.size > 0) {
+        recordedChunks.push(event.data);
+      }
+    };
+
+    mediaRecorder.onstop = () => {
+      const blob = new Blob(recordedChunks, { type: 'audio/webm' });
+      const audioUrl = URL.createObjectURL(blob);
+      // Store for playback
+      currentSession.lastRecording = audioUrl;
+      document.getElementById('playback-btn').style.display = 'inline-block';
+    };
+
+    mediaRecorder.start();
+    document.getElementById('record-btn').textContent = '⏹️ Stop Recording';
+    document.getElementById('record-btn').onclick = stopRecording;
+
+  } catch (error) {
+    console.error('Error accessing microphone:', error);
+    alert('Unable to access microphone. Please check your browser permissions.');
+  }
+}
+
+function stopRecording() {
+  if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+    mediaRecorder.stop();
+    mediaRecorder.stream.getTracks().forEach(track => track.stop());
+  }
+
+  document.getElementById('record-btn').textContent = '🎤 Record Response';
+  document.getElementById('record-btn').onclick = startRecording;
+}
+
+function playbackRecording() {
+  if (currentSession.lastRecording) {
+    const audio = new Audio(currentSession.lastRecording);
+    audio.play();
+  }
+}
+
+// Initialize dashboard on load
+document.addEventListener('DOMContentLoaded', function() {
+  updateDashboardStats();
+});
+</script>
+
+<style>
+.practice-dashboard {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.practice-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.stat-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+}
+
+.stat-value {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+
+.stat-label {
+  color: var(--muted);
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.mode-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.mode-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.mode-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(124, 58, 237, 0.1);
+}
+
+.mode-icon {
+  font-size: 3rem;
+  margin-bottom: 16px;
+  display: block;
+}
+
+.mode-card h3 {
+  margin: 0 0 12px 0;
+  color: var(--fg);
+}
+
+.mode-card p {
+  color: var(--muted);
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+.mode-btn {
+  background: var(--accent);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.mode-btn:hover {
+  background: var(--accent-hover);
+}
+
+.practice-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.practice-container {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  width: 90vw;
+  max-width: 900px;
+  height: 80vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.practice-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border);
+}
+
+.practice-info {
+  display: flex;
+  gap: 20px;
+  color: var(--muted);
+}
+
+.practice-controls {
+  display: flex;
+  gap: 12px;
+}
+
+.timer-btn {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  color: var(--accent);
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-family: monospace;
+  font-weight: 600;
+}
+
+.exit-btn {
+  background: var(--danger-bg);
+  border: 1px solid var(--danger-border);
+  color: var(--danger-border);
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.practice-content {
+  flex: 1;
+  padding: 24px;
+  overflow-y: auto;
+}
+
+.practice-question {
+  margin-bottom: 32px;
+}
+
+.question-category {
+  color: var(--accent);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 12px;
+}
+
+.practice-question h2 {
+  margin: 0 0 16px 0;
+  line-height: 1.3;
+}
+
+.difficulty-indicator {
+  display: inline-block;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.practice-answer {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.answer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.answer-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.record-btn, .playback-btn {
+  background: var(--progress-bg);
+  border: 1px solid var(--border);
+  color: var(--fg);
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.answer-text {
+  line-height: 1.6;
+  white-space: pre-line;
+}
+
+.practice-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.primary-btn {
+  background: var(--accent);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.secondary-btn {
+  background: transparent;
+  color: var(--fg);
+  border: 1px solid var(--border);
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.confidence-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--muted);
+}
+
+.confidence-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.confidence-btn {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  background: transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.confidence-btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.confidence-btn.active {
+  background: rgba(124, 58, 237, 0.2);
+  border-color: var(--accent);
+}
+
+.progress-bar {
+  height: 4px;
+  background: var(--progress-bg);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--accent);
+  transition: width 0.3s ease;
+  width: 0%;
+}
+
+.modal-container {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  width: 90vw;
+  max-width: 600px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border);
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 8px;
+}
+
+.category-options {
+  padding: 20px 24px;
+  display: grid;
+  gap: 12px;
+}
+
+.category-option {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s ease;
+}
+
+.category-option:hover {
+  border-color: var(--accent);
+  background: rgba(124, 58, 237, 0.05);
+}
+
+.category-icon {
+  font-size: 1.5rem;
+  width: 40px;
+  text-align: center;
+}
+
+.session-results {
+  padding: 24px;
+}
+
+.result-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.result-stat {
+  text-align: center;
+}
+
+.result-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+
+.result-label {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.improvement-areas {
+  margin-bottom: 24px;
+}
+
+.improvement-areas ul {
+  list-style: none;
+  padding: 0;
+}
+
+.improvement-areas li {
+  padding: 8px 0;
+  color: var(--muted);
+  border-bottom: 1px solid var(--border);
+}
+
+.session-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+@media (max-width: 768px) {
+  .practice-container {
+    width: 95vw;
+    height: 90vh;
+    border-radius: 0;
+  }
+
+  .practice-header {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+    padding: 16px;
+  }
+
+  .practice-info {
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
+  }
+
+  .practice-controls {
+    justify-content: center;
+  }
+
+  .practice-content {
+    padding: 16px;
+  }
+
+  .practice-question h2 {
+    font-size: 1.3rem;
+    line-height: 1.4;
+  }
+
+  .practice-actions {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .confidence-section {
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+  }
+
+  .confidence-buttons {
+    justify-content: center;
+  }
+
+  .answer-header {
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .answer-actions {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .record-btn, .playback-btn {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .result-stats {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .mode-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .mode-card {
+    padding: 20px;
+  }
+
+  .mode-icon {
+    font-size: 2.5rem;
+    margin-bottom: 12px;
+  }
+
+  .practice-stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .stat-card {
+    padding: 16px;
+  }
+
+  .stat-value {
+    font-size: 2rem;
+  }
+
+  .modal-container {
+    width: 95vw;
+    height: 90vh;
+    border-radius: 0;
+  }
+
+  .category-options {
+    padding: 16px;
+    gap: 8px;
+  }
+
+  .category-option {
+    padding: 12px;
+  }
+
+  .category-icon {
+    font-size: 1.2rem;
+    width: 32px;
+  }
+
+  .session-actions {
+    flex-direction: column;
+  }
+
+  .primary-btn, .secondary-btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .practice-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .practice-question h2 {
+    font-size: 1.1rem;
+  }
+
+  .confidence-btn {
+    padding: 10px 8px;
+    font-size: 0.9rem;
+  }
+
+  .timer-btn {
+    font-size: 0.9rem;
+  }
+
+  .mode-card h3 {
+    font-size: 1.1rem;
+  }
+
+  .mode-card p {
+    font-size: 0.9rem;
+  }
+}
+</style>
